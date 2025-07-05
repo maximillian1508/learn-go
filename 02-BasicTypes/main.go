@@ -23,7 +23,7 @@ func main(){ // Go can infer the type of the variable if you don't specify it
 	fmt.Printf("a: %8T %[1]v\n", a) // %T VERB is the type of the variable, %v VERB is the value of the variable
 	fmt.Printf("b: %8T %[1]v\n", b) // The 8 is the width of the field, it will be padded with spaces to the right
 	fmt.Printf("c: %8T %[1]v\n", c) // The [1] is the index of the variable, it will be padded with spaces to the right
-	fmt.Printf("d: %8T %[1]v\n", d)
+	fmt.Printf("d: %8T %[1]v\n", d) // Printf's family uses 1-based indexing
 	fmt.Printf("e: %8T %[1]v\n", e)
 	fmt.Printf("f: %8T %[1]v\n", f)
 		
