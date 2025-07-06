@@ -41,4 +41,6 @@ func main() {
 
 	// Go is a garbage collected language, if the "the quick brown fox" is not referenced anywhere else, it will be garbage collected
 	search.SearchAndReplace()
+
+	// A string can point to another string
 }
