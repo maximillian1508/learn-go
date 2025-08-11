@@ -16,9 +16,9 @@ func main() {
 	// The length of the string is the number of bytes required to represent the unicode characters, not the number of unicode characters
 	// Logically, strings are a sequence of (unicode) runes
 
-	fmt.Printf("%T %[1]v %d\n", s, len(s))
-	fmt.Printf("%T %[1]v %d\n", []rune(s), len([]rune(s)))
-	fmt.Printf("%T %[1]v %d\n", []byte(s), len([]byte(s)))
+	fmt.Printf("%T %[1]v %d\n", s, len(s)) // 6
+	fmt.Printf("%T %[1]v %d\n", []rune(s), len([]rune(s))) // []int32{233, 108, 105, 116, 101} 5
+	fmt.Printf("%T %[1]v %d\n", []byte(s), len([]byte(s))) // []uint8{195, 169, 108, 105, 116, 101} 6
 
 	// String Structure
 	// The internal string representation is a pointer and a length

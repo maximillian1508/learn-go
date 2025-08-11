@@ -12,13 +12,13 @@ func main(){ // Go can infer the type of the variable if you don't specify it
 	var (
 		b = 2
 		c = 2.1
-	)
+	) // this one can be used to declare variables with different types if we explicitly specify the type of the variable
 
 	// Short Declaration
 	d := 3
 
 	// Multiple Declaration
-	e, f := 4, 5
+	e, f := 4, 5 // cannot declare different types in the same line, will generate compiler error - type mismatch
 
 	fmt.Printf("a: %8T %[1]v\n", a) // %T VERB is the type of the variable, %v VERB is the value of the variable
 	fmt.Printf("b: %8T %[1]v\n", b) // The 8 is the width of the field, it will be padded with spaces to the right
