@@ -1,5 +1,6 @@
 package main
 
+// factored import statement, this is a good practice to keep the imports organized and easy to read
 import (
 	"fmt"
 	"hello"
