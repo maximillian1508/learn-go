@@ -18,11 +18,12 @@ func main() { // Go can infer the type of the variable if you don't specify it
 	d := 3
 
 	// Multiple Declaration
-	e, f := 4, 5 // cannot declare different types in the same line, will generate compiler error - type mismatch
+	e, f := 4, 5
 
 	fmt.Printf("a: %8T %[1]v\n", a) // %T VERB is the type of the variable, %v VERB is the value of the variable
-	fmt.Printf("b: %8T %[1]v\n", b) // The 8 is the width of the field, it will be padded with spaces to the right
-	fmt.Printf("c: %8T %[1]v\n", c) // The [1] is the index of the variable, it will be padded with spaces to the right
+	fmt.Printf("b: %8T %[1]v\n", b) // The 8 is the width of the field (width specifier) - pads to 8 characters, right-aligned (use %-8T for left-aligned)
+	fmt.Printf("c: %8T %[1]v\n", c) // The [1] is the index of the argument variable, it will reuse the first argument variable (in this case, c).
+									//  why we do this? its because the %T uses the first argument, so %v naturally tries to use the second argument (which doesnt exist here), to avoid this, we use the [1] index to reuse the first argument.
 	fmt.Printf("d: %8T %[1]v\n", d) // Printf's family uses 1-based indexing
 	fmt.Printf("e: %8T %[1]v\n", e)
 	fmt.Printf("f: %8T %[1]v\n", f)
@@ -31,6 +32,11 @@ func main() { // Go can infer the type of the variable if you don't specify it
 	fmt.Printf("a: %8T %[1]v\n", a) // %T VERB is the type of the variable, %v VERB is the value of the variable
 	c = float64(a)                  // Type cast
 	fmt.Printf("c: %8T %[1]v\n", c)
+
+	// Type conversion
+	// var i int = 42
+	// var f float64 = float64(i)
+	// var u uint = uint(f)
 
 	// Initialization
 	// Every variable in go is initialized
@@ -62,10 +68,5 @@ func main() { // Go can infer the type of the variable if you don't specify it
 	// const Small = Big >> 99 // 1 shifted 99 times to the right
 	// Go constants are computed at compile time with unlimited precision, then checked against the target type only when assigned or passed to a function.
 	// This gives you flexibility to do intermediate calculations that exceed normal integer limits.
-
-	// Type conversion
-	// var i int = 42
-	// var f float64 = float64(i)
-	// var u uint = uint(f)
 
 }

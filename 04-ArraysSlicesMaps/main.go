@@ -18,25 +18,39 @@ func main() {
 
 	// arrayD = arrayB // Type mismatch
 
-	// Slices: Variable length array, Slice has a descriptor similar to a string
+	// Slices: Variable length array, Slice has a descriptor/header similar to a string and it points to an underlying array
 	var sliceA []int
 	var sliceB = []int{1, 2} // it has a length and capacity
+	// length is the number of elements in the slice
+	// capacity is the number of elements in the underlying array
 
 	sliceA = append(sliceA, 1) // append takes a slice and an element and puts that element at the end of the slice
 	// same as a string, the sliceA descriptor will change, it will have a new pointer to a new location in memory and a new length
 	sliceB = append(sliceB, 3)
 	sliceA = sliceB          // in this case, we just copied the sliceB descriptor to sliceA, so both will point to the same underlying array
 	sliceC := make([]int, 2) // make takes a type, a length and a capacity. result is same as []int{0, 0}
-	sliceD := sliceA         // alias, same descriptor as sliceA
+	// we use capacity to preallocate the memory for the slice, so that we dont have to resize the slice everytime we append an element later
+	// sliceC := make([]int, 2, 4) // []int{0, 0} with capacity of 4
+	// Reallocation is bad because it creates a new slice and copies the elements to the new slice, this is expensive
+	// Memory allocation is slow, it uses cpu cycles and time, and it causes memory churn (memory fragmentation)
+	// However, dont over optimize, only pre-allocate when you know the size or when performance matters
+
+	// When to use Make with capacity?
+	// Scenario 1: When it will produce the same number of outputs as inputs, use make with same length and capacity (make([]int, 2, 2) or make([]int, 2)) we then use index based transformation
+	// Scenario 2: When you know it will produce fewer outputs than inputs, use make with 0 length and exact capacity needed (make([]int, 0, 2)), we then use append to add elements
+	// Scenario 3: Unknown input and outputs, use make with 0 length and estimated capacity
+
+	sliceD := sliceA // alias, same descriptor as sliceA
 	fmt.Println(sliceC[:2])
 	fmt.Println(len(sliceD))
 	// sliceD[0] == sliceB[0] // true because they point to the same underlying array
 
-	// Slices are passed by reference, thus elements are not copied, meaning that if i change something in sliceD, it will also reflect in sliceA
-	// Slices are constructed of pointer to an array, length and capacity, pass by reference in this case is the pointer to the underlying array is the one that is copied
+	// Slices are passed by value, meaning it passes the full header/descriptor that includes a pointer to the underlying array, length and capacity
+	// By including a pointer to the underlying array, changes made to the values/elements inside the slice will be reflected in the caller's slice as well.
+	// However, since its passed by value, the header/descriptor (e.g. length and capacity) of the caller's slice will not be affected if we modify the slice using append, etc.
 	// Most go apis use slices as an input
 	// Generally not safe to use the equality operator to compare slices
-	// Slices are generally used as a function parameter, because they are passed by reference
+	// Slices are generally used as a function parameter, because they are cheap to pass/copy (only the header/descriptor is copied), it accepts variable length of elements
 
 	// Array Slice Example
 	var arrayW = [...]int{1, 2, 3}
@@ -49,10 +63,16 @@ func main() {
 	// Maps: map of key-value pairs
 	// Maps are almost certainly like a hash table behind the scenes
 	// We can read from a nil map, but we cannot write to it as it will panic
-	// Similar to strings and slices, where it has a descriptor, thereby being passed by reference
 	// Maps points to a hash table behind the scenes
 	var mapWithoutMake map[string]int // map[keyType]valueType, this one will be nil with no storage, this will not point to a hash table because it is not initialized yet
-	mapMake := make(map[string]int)   // map[keyType]valueType, this one will be initialized menaing not nil with no storage
+	mapMake := make(map[string]int)   // map[keyType]valueType, this one will be initialized meaning not nil with no storage
+
+	// Comma-OK Idiom:
+	// m := map[string]int{"a": 1, "b": 0}
+	// if we want to check if a key exists in the map, we can use the comma-ok idiom
+	// v, ok := m["a"] // v=1, ok=true because "a" is in the map
+	// v, ok := m["b"] // v=0, ok=true because "b" is in the map
+	// v, ok := m["c"] // v=0, ok=false because "c" is not in the map
 
 	fmt.Println(mapWithoutMake, mapMake)
 
@@ -70,12 +90,12 @@ func main() {
 func arraySliceExample(a [3]int, b []int) []int {
 	//a = b // Syntax error because we cant assign a slice to an array
 	a[0] = 4 // array variable outside the function scope (parameter - arrayW) will not change, only the a variable will be change because a copies the whole values of the parameters
-	b[0] = 3 // this will change the slice variable outside the function scope (parameter - sliceX) because b is a pointer to the underlying array
+	b[0] = 3 // this will change the slice variable outside the function scope (parameter - sliceX) because b's header contains a pointer to the underlying array
 
 	c := make([]int, 5) // []int{0, 0, 0, 0, 0}
 	c[4] = 42           // []int{0, 0, 0, 0, 42}
 
-	copy(c, b) // copy the values of b to c. int[]{3, 0, 0, 0, 42}
+	copy(c, b) // copy the values of b to c. []int{3, 0, 0, 0, 42}
 
 	return c
 }

@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// any function that starts with a capital letter is exported, meaning it can be used outside the package
+// any function that starts with a capital letter can be exported, meaning it can be used outside the package (Private and Public functions)
 // in go, functions can return multiple values - return x, y, z... - a, b := test()
 func Say(name string) string {
 	return fmt.Sprintf("Hello, %s!", name)
